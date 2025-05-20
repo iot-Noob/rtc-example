@@ -5,12 +5,27 @@ This is a simple React-based WebRTC example project demonstrating how to create 
 ## 🚀 Features
 
 - Create WebRTC offer using `RTCPeerConnection`
-- Manually input SDP and ICE to simulate peer-to-peer connection
-- Display generated offer and ICE candidates
-- React functional component with hooks (`useState`, `useEffect`)
-- Tailwind CSS for UI styling
+- Manually input SDP and ICE to simulate peer-to-peer # 📡 WebRTC Peer Connection Demo
 
-## 🧰 Technologies Used
+A lightweight React-based demo showcasing how to establish a WebRTC peer-to-peer connection **without a signaling server**.
+
+This project is designed for educational purposes and demonstrates how to manually exchange SDP and ICE candidates between two peers using basic UI controls.
+
+---
+
+## 🚀 Features
+
+- Create a WebRTC offer using `RTCPeerConnection`
+- Manually input and parse remote SDP and ICE data
+- Display and copy the generated offer/answer and ICE candidates
+- Fully built using:
+  - React functional components
+  - React Hooks (`useState`, `useEffect`, `useRef`)
+  - Tailwind CSS for styling
+
+---
+
+## 🧰 Tech Stack
 
 - **React**
 - **WebRTC API**
@@ -18,9 +33,9 @@ This is a simple React-based WebRTC example project demonstrating how to create 
 
 ---
 
-## 📦 Installation
+## 📦 Getting Started
 
-## **1. Clone the repository:**
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/iot-Noob/rtc-example
@@ -44,30 +59,45 @@ src/
 ```
 
 ## **🛠️ How It Works**
- ### **✅ Step 1: Create an Offer**
+ ### **✅ Step 1: Create Offer (Peer A)**
 1. Click the "Create Offer" button.
-2. The generated SDP offer will appear in the output box.
-3. Copy this offer and send it to the remote peer.
-### **✅ Step 2: Receive Answer**
-1. The remote peer should:
-    - Paste the received SDP offer in the input field.
-    - Paste one ICE candidate (manually for now).
-    - Click "Make Call" to generate an answer.
-2. The SDP answer and ICE for the remote peer will be generated similarly.
+2. The generated SDP offer will appear in the output field.
+3. Copy the SDP and ICE values. 
+### **✅ Step 2: Make Call (Peer B)**
+1. Paste the SDP offer and ICE candidate into the respective input fields.
+2. Click ``**"Make Call"**.``
+3. This will:
+- Set the remote description
+- Add the ICE candidate
+- Create and send back an SDP answer
+## **🔁 Manual Exchange**
+- Copy the SDP answer and ICE from Peer B and input it into Peer A manually.
+- This simulates a manual signaling process and establishes the WebRTC connection.
 
 ### **🧪 Testing**
-This demo is best tested by opening two browser tabs or windows (ideally in different browsers or incognito), acting as two peers, and manually copying the offer/answer and ICE candidates.
+To test the connection:
+- Open the app in two browser tabs, ideally in different browsers or one in Incognito mode.
+
+- Treat each as a separate peer (A and B).
+
+- Manually copy-paste SDP and ICE between tabs.
+
+- Check the browser console logs for successful data channel events and message exchanges.
 ### **⚠️ Limitations**
-No signaling server: Manual exchange of data is required.
+- ❌ No signaling server (you must manually exchange SDP/ICE)
+- ❌ Only a single ICE candidate is handled at a time
+- ❌ No audio/video streaming — only data channels
+- ❌ Not intended for production use
 
-Only single ICE candidate handling
 
-Basic example: Not production-ready, intended for educational purposes
-### **✨ To-Do (Optional Enhancements)**
-- Add a signaling server (WebSocket/Socket.IO)
-- Support multiple ICE candidates
-- Add media stream handling (audio/video)
-- Error boundary handling and UX 
+### **✨ Future Improvements**
+Add signaling via WebSocket or Socket.IO
+
+Handle multiple ICE candidates automatically
+
+Add media stream support (audio/video)
+
+Improve error handling and user feedback
 
 ### **🧑‍💻 Author**
 M Talha Khalid IOT Noob
