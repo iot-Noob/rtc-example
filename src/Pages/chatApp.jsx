@@ -94,7 +94,7 @@ export const chatApp = () => {
       await peerRef.current.addIceCandidate(iceCandidate);
 
       const answerDesc = await peerRef.current.createAnswer();
-      await peerRef.current.setLocalDescription(answerDesc);
+      await peerRef.current.setRe(answerDesc);
       setOffer(JSON.stringify(answerDesc));
     } catch (err) {
       console.error("Answer error:", err);
