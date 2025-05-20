@@ -1,6 +1,8 @@
  
 import { rtcExample } from '../Pages/rtcExample'
 import { chatApp } from '../Pages/chatApp'
+import { videoChat } from '../Pages/videoChat'
+import webcamTest from '../Pages/webcamTest'
 const SiteRoute = [
   {
     path: 'rtc', 
@@ -9,6 +11,14 @@ const SiteRoute = [
     {
     path: 'chat', 
     Element: chatApp,
+  },
+   {
+    path: 'video', 
+    Element: videoChat,
+  },
+   {
+    path: 'webcam', 
+    Element: webcamTest,
   },
 ]
 
