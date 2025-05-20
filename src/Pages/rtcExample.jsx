@@ -28,6 +28,10 @@ export const rtcExample = () => {
       console.log("Data channel closed");
     };
 
+    dc.onmessage=(e)=>{
+      console.log("Message recive on data chanel:::",e.data)
+    }
+
     dc.onerror = (e) => {
       console.error("Data channel error:", e);
     };
@@ -61,6 +65,7 @@ export const rtcExample = () => {
     };
 
     return () => {
+      console.log("Wind up pages good BYE!!!")
       if (peerRef.current) peerRef.current.close();
       if (dataChannelRef.current) dataChannelRef.current.close();
       if (receiveChannelRef.current) receiveChannelRef.current.close();
