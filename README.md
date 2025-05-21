@@ -1,33 +1,40 @@
 # WebRTC Peer Connection Demo
-
 This is a simple React-based WebRTC example project demonstrating how to create peer connections, generate offers/answers, and exchange ICE candidates manually. It helps understand the basics of WebRTC without a signaling server.
-
-## 🚀 Features
-
-- Create WebRTC offer using `RTCPeerConnection`
-- Manually input SDP and ICE to simulate peer-to-peer # 📡 WebRTC Peer Connection Demo
-
-A lightweight React-based demo showcasing how to establish a WebRTC peer-to-peer connection **without a signaling server**.
-
-This project is designed for educational purposes and demonstrates how to manually exchange SDP and ICE candidates between two peers using basic UI controls.
 
 ---
 
 ## 🚀 Features
 
 - Create a WebRTC offer using `RTCPeerConnection`
-- Manually input and parse remote SDP and ICE data
+- Manually input and parse remote SDP and ICE data to simulate peer-to-peer communication
 - Display and copy the generated offer/answer and ICE candidates
+- Basic data channel for messaging (chat)
+- Video streaming support for peer-to-peer video calls
 - Fully built using:
   - React functional components
   - React Hooks (`useState`, `useEffect`, `useRef`)
   - Tailwind CSS for styling
+---
+
+## 🚀 Features
+
+- Create a WebRTC offer using `RTCPeerConnection`
+- Manually input and parse remote SDP and ICE data to simulate peer-to-peer communication
+- Display and copy the generated offer/answer and ICE candidates
+- Basic data channel for messaging (chat)
+- Video streaming support for peer-to-peer video calls
+- Fully built using:
+  - React functional components
+  - React Hooks (`useState`, `useEffect`, `useRef`)
+  - Tailwind CSS for styling
+
 
 ---
 
 ## 🧰 Tech Stack
 
 - **React**
+- **React Router v6** for client-side routing
 - **WebRTC API**
 - **Tailwind CSS**
 
@@ -54,8 +61,14 @@ npm run dev
 src/
 ├── components/
 │   └── rtcExample.js       # Main WebRTC logic
+├── routes/
+│   └── SlicerIndex.js      # Nested WebRTC routes handler
+├── Pages/
+│   ├── Welcome.js          # Welcome landing page
+│   ├── NotFound.js         # 404 page
+│   └── ...                 # Other feature pages
 ├── index.js                # Entry point
-└── App.js                  # App wrapper
+└── App.js                  # App wrapper with routing
 ```
 
 ## **🛠️ How It Works**
@@ -99,6 +112,61 @@ Add media stream support (audio/video)
 
 Improve error handling and user feedback
 
+## 📚 Routing and Application Structure
+
+This project uses **React Router v6** for client-side routing with lazy loading and nested routes to improve performance and modularity.
+
+### Main Routes in `App.js`
+
+The app uses `React.lazy` and `Suspense` to load pages/components asynchronously.
+
+Routes defined:
+
+- `/` → Loads the **Welcome** page lazily.
+- `/webrtc/*` → Loads the **SlicerIndex** component, which handles all sub-routes under `/webrtc`.
+- `*` (catch-all) → Loads the **NotFound** page for undefined routes.
+
+### Code Example (simplified):
+
+```jsx
+import { lazy, Suspense } from 'react'
+import { Routes, Route } from 'react-router-dom'
+
+const Welcome = lazy(() => import('./Pages/Welcome'))
+const NotFound = lazy(() => import('./Pages/NotFound'))
+import { SlicerIndex } from './routes/SlicerIndex'
+
+function App() {
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/webrtc/*" element={<SlicerIndex />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
+  )
+}
+```
+### **About** SlicerIndex
+* SlicerIndex is a nested router component that manages all WebRTC-related routes under /webrtc.
+* This allows grouping of WebRTC demo features (/webrtc/rtc, /webrtc/chat, /webrtc/video, etc.) under one parent path.
+### **🎨 Loading Screen**
+While lazily loaded components are fetched, a loading spinner and message display via the `Suspense` fallback component `LoadingScreen`:
+```jsx
+const LoadingScreen = () => (
+  <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <div className="flex flex-col items-center space-y-4 bg-white bg-opacity-20 backdrop-blur-md rounded-xl p-8 shadow-lg">
+      <div className="loading-spinner loading loading-spinner-lg loading-primary"></div>
+      <h2 className="text-white text-xl font-semibold">Loading, please wait...</h2>
+    </div>
+  </div>
+)
+```
+### **🧭 How to Navigate**
+- Visit / for the Welcome page.
+- Visit /webrtc to access the main WebRTC demo features via nested routing.
+- Unknown routes show the 404 Not Found page.
 ### **🧑‍💻 Author**
 M Talha Khalid IOT Noob
 
