@@ -91,10 +91,10 @@ export const chatApp = () => {
         sdpMid: "0",
         sdpMLineIndex: 0,
       });
-      await peerRef.current.addIceCandidate(iceCandidate);
+    await peerRef.current.addIceCandidate(iceCandidate);
 
       const answerDesc = await peerRef.current.createAnswer();
-      await peerRef.current.setRe(answerDesc);
+    await peerRef.current.setLocalDescription(answerDesc);
       setOffer(JSON.stringify(answerDesc));
     } catch (err) {
       console.error("Answer error:", err);
