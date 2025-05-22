@@ -13,17 +13,31 @@ export const chatApp = () => {
 
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
-
+  const online=useRef(false)
+  
   useEffect(() => {
     const p1 = new RTCPeerConnection(rtcdata.config);
     peerRef.current = p1;
-
+    
+  p1.onconnectionstatechange = () => {
+    const state = p1.connectionState;
+    console.log("📡 Connection state:", state);
+    if (state === 'connected') {
+       online.current=true
+      console.log("✅ WebRTC Peer Connected");
+    } else if (['disconnected', 'failed', 'closed'].includes(state)) {
+     online.current=false
+      console.log("❌ WebRTC Peer Disconnected or Failed");
+    }
+  };
+  
     const dc = p1.createDataChannel("chat");
     dataChannelRef.current = dc;
-
+    
     dc.onopen = () => {
       console.log("Data channel open");
       dc.send("ammi ki taraf se salam");
+ 
     };
 
     dc.onmessage = (e) => {
@@ -82,6 +96,10 @@ export const chatApp = () => {
   };
 
   const createAnswer = async () => {
+    if (!uspd &&!uice ||!uspd ||!uice){
+      console.error("Error occur create answer no ice or spd provided")
+      return
+    }
     try {
       const remoteDesc = new RTCSessionDescription(JSON.parse(uspd));
       await peerRef.current.setRemoteDescription(remoteDesc);
@@ -100,6 +118,27 @@ export const chatApp = () => {
       console.error("Answer error:", err);
     }
   };
+
+const hangup = () => {
+  try {
+    peerRef.current?.close();
+    dataChannelRef.current?.close();
+    receiveChannelRef.current?.close();
+  } catch (err) {
+    console.warn("Error closing peer connection:", err);
+  }
+
+   online.current=false
+  console.log("🔌 Disconnected");
+
+  // Optional: reset everything
+  setIce([]);
+  setOffer('');
+  setUspd('');
+  setUice('');
+  setMessage('');
+  setChat([]);
+};
 
   return (
     <div className="p-6 space-y-6">
@@ -120,8 +159,15 @@ export const chatApp = () => {
             placeholder="Paste ICE candidate here"
           />
           <div className="flex gap-4 mt-4">
-            <button className="btn btn-primary" onClick={createAnswer}>Make Call</button>
-            <button className="btn btn-secondary" onClick={createOffer}>Create Offer</button>
+<button
+  className={`btn btn-primary ${(!uspd || !uice) && !online.current ? "btn-disabled" : ""}`}
+  onClick={online.current ? hangup : createAnswer}
+  disabled={(!uspd || !uice) && !online.current} // disable attribute for better accessibility
+>
+  {online.current ? "Hang UP" : "Make Call"}
+</button>
+
+            <button className={`btn btn-secondary  ${online.current==true  ?"btn-disabled":""}`} onClick={createOffer}>Create Offer</button>
           </div>
           {offer && (
             <>
@@ -152,14 +198,15 @@ export const chatApp = () => {
           </div>
           <div className="flex gap-2">
             <input
-              className="input input-bordered flex-1"
+              disabled={!online.current}
+              className={`input input-bordered flex-1  `}
               type="text"
               placeholder="Type a message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
             />
-            <button className="btn btn-accent" onClick={sendMessage}>Send</button>
+            <button className={`btn btn-accent ${online.current?"":"btn-disabled"}`}onClick={sendMessage}>Send</button>
           </div>
         </div>
       </div>
